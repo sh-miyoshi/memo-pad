@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, View } from 'react-native';
-import { Header, Icon } from 'react-native-elements';
+import { Header, Icon, Overlay } from 'react-native-elements';
 
-export default function Top() {
+export const Top = () => {
   return (
     <View>
       <TopHeader />
@@ -11,12 +11,22 @@ export default function Top() {
   );
 }
 
-function TopHeader() {
+const TopHeader = () => {
+  const [menuShow, setMenuShow] = useState(false);
+  const toggleMenu = () => {
+    setMenuShow(!menuShow)
+  }
+
   return (
-    <Header
-      centerComponent={{ text: 'メモ帳', style: { color: '#ffffff' } }}
-      rightComponent={<Icon name='menu' color='#ffffff' onPress={() => { }} />}
-      containerStyle={{ backgroundColor: '#808080' }}
-    />
+    <View>
+      <Header
+        centerComponent={{ text: 'メモ帳', style: { color: '#ffffff' } }}
+        rightComponent={<Icon name='menu' color='#ffffff' onPress={toggleMenu} />}
+        containerStyle={{ backgroundColor: '#808080' }}
+      />
+      <Overlay isVisible={menuShow} onBackdropPress={toggleMenu}>
+        <Text>設定</Text>
+      </Overlay>
+    </View>
   )
 }
