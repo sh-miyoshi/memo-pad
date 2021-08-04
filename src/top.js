@@ -1,12 +1,32 @@
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
-import { Header, Icon, Overlay, Button } from 'react-native-elements';
+import { Header, Icon, Overlay, Button, ListItem } from 'react-native-elements';
 
 export const Top = () => {
+  const memos = [
+    {
+      id: "id1",
+      title: "大事なもの",
+    },
+    {
+      id: "id2",
+      title: "アイテム",
+    },
+  ]
+
   return (
     <View>
       <TopHeader />
-      <Text>hello</Text>
+      {
+        memos.map((memo, i) => (
+          <ListItem key={i} bottomDivider onPress={() => { console.log(memo.title) }}>
+            <ListItem.Content>
+              <ListItem.Title>{memo.title}</ListItem.Title>
+              <ListItem.Subtitle>2021/08/04 21:01</ListItem.Subtitle>
+            </ListItem.Content>
+          </ListItem>
+        ))
+      }
     </View>
   );
 }
@@ -33,11 +53,12 @@ const TopHeader = () => {
           <Icon
             name="pluscircleo"
             type="antdesign"
-            size={15}
-            color="white"
+            color="black"
           />
         }
         title="新しいメモを追加"
+        titleStyle={{ color: "black", padding: 10 }}
+        buttonStyle={{ backgroundColor: "#d3d3d3", margin: 10 }}
       />
 
     </View>
