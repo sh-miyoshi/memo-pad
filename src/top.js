@@ -14,6 +14,15 @@ export const Top = ({ navigation }) => {
     },
   ]
 
+  const goMemo = (id) => {
+    if (id != null) {
+      console.log("Edit " + id)
+    } else {
+      console.log("Create new memo")
+    }
+    navigation.navigate('Memo')
+  }
+
   return (
     <View style={styles.container}>
       <TopHeader />
@@ -29,12 +38,12 @@ export const Top = ({ navigation }) => {
         title="新しいメモを追加"
         titleStyle={{ color: "black", padding: 10 }}
         buttonStyle={{ backgroundColor: "#d3d3d3", margin: 10 }}
-        onPress={() => navigation.navigate('Memo')}
+        onPress={() => goMemo(null)}
       />
 
       {
         memos.map((memo, i) => (
-          <ListItem key={i} bottomDivider onPress={() => { console.log(memo.title) }}>
+          <ListItem key={i} bottomDivider onPress={() => goMemo(memo.id)} style={{ width: '90%' }}>
             <ListItem.Content>
               <ListItem.Title>{memo.title}</ListItem.Title>
               <ListItem.Subtitle>2021/08/04 21:01</ListItem.Subtitle>
