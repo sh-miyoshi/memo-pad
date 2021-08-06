@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { Header, Icon, Overlay, Button, ListItem } from 'react-native-elements';
 
-export const Top = () => {
+export const Top = ({ navigation }) => {
   const memos = [
     {
       id: "id1",
@@ -15,8 +15,23 @@ export const Top = () => {
   ]
 
   return (
-    <View>
+    <View style={styles.container}>
       <TopHeader />
+
+      <Button
+        icon={
+          <Icon
+            name="pluscircleo"
+            type="antdesign"
+            color="black"
+          />
+        }
+        title="新しいメモを追加"
+        titleStyle={{ color: "black", padding: 10 }}
+        buttonStyle={{ backgroundColor: "#d3d3d3", margin: 10 }}
+        onPress={() => navigation.navigate('Memo')}
+      />
+
       {
         memos.map((memo, i) => (
           <ListItem key={i} bottomDivider onPress={() => { console.log(memo.title) }}>
@@ -46,21 +61,16 @@ const TopHeader = () => {
       />
       <Overlay isVisible={menuShow} onBackdropPress={toggleMenu}>
         <Text>設定</Text>
+        <Text>・文字の大きさ</Text>
       </Overlay>
-
-      <Button
-        icon={
-          <Icon
-            name="pluscircleo"
-            type="antdesign"
-            color="black"
-          />
-        }
-        title="新しいメモを追加"
-        titleStyle={{ color: "black", padding: 10 }}
-        buttonStyle={{ backgroundColor: "#d3d3d3", margin: 10 }}
-      />
-
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fffafa',
+    alignItems: 'center',
+  },
+});
