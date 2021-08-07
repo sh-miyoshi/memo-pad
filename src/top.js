@@ -1,18 +1,10 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { Header, Icon, Overlay, Button, ListItem } from 'react-native-elements';
+import { LoadList } from './store';
 
 export const Top = ({ navigation }) => {
-  const memos = [
-    {
-      id: "id1",
-      title: "大事なもの",
-    },
-    {
-      id: "id2",
-      title: "アイテム",
-    },
-  ]
+  const memos = LoadList()
 
   const goMemo = (id) => {
     if (id != null) {
@@ -46,7 +38,7 @@ export const Top = ({ navigation }) => {
           <ListItem key={i} bottomDivider onPress={() => goMemo(memo.id)} style={{ width: '90%' }}>
             <ListItem.Content>
               <ListItem.Title>{memo.title}</ListItem.Title>
-              <ListItem.Subtitle>2021/08/04 21:01</ListItem.Subtitle>
+              <ListItem.Subtitle>{formatDate(memo.updatedAt)}</ListItem.Subtitle>
             </ListItem.Content>
           </ListItem>
         ))
@@ -83,3 +75,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+const formatDate = (date) => {
+  const d = new Date(date)
+  return d.getFullYear() + '/' + ('0' + (d.getMonth() + 1)).slice(-2) + '/' + ('0' + d.getDate()).slice(-2) + ' ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2)
+}
