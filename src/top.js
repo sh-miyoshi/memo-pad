@@ -12,7 +12,7 @@ export const Top = ({ navigation }) => {
     } else {
       console.log("Create new memo")
     }
-    navigation.navigate('Memo')
+    navigation.navigate('Memo', { id: id })
   }
 
   return (

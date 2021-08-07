@@ -2,12 +2,13 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import { TextInput, DefaultTheme } from 'react-native-paper';
+import { LoadMemo, UpdateMemo } from './store';
 
-export const Memo = () => {
+export const Memo = ({ route }) => {
   return (
     <View style={styles.container}>
       <MemoHeader />
-      <MemoBody />
+      <MemoBody id={route.params.id} />
     </View>
   )
 }
@@ -28,14 +29,20 @@ const MemoHeader = () => {
   )
 }
 
-const MemoBody = () => {
-  const [text, setText] = React.useState('');
+const MemoBody = ({ id }) => {
+  const memo = LoadMemo(id)
+  const [text, setText] = React.useState(memo.text);
 
   return (
     <View style={styles.textinput}>
       <TextInput
         value={text}
-        onChangeText={text => setText(text)}
+        onChangeText={
+          (text) => {
+            setText(text)
+            UpdateMemo(id, text)
+          }
+        }
         multiline
         placeholder="メモ内容(自動保存されます)"
         theme={textTheme}

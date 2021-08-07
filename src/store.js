@@ -32,7 +32,11 @@ export const LoadList = () => {
 }
 
 export const LoadMemo = (id) => {
-  return textMemos.find(m => m.id === id)
+  const memo = textMemos.find(m => m.id === id)
+  if (memo != null) {
+    return memo
+  }
+  return { text: '' }
 }
 
 export const AddMemo = (title, text) => {
@@ -53,13 +57,13 @@ export const AddMemo = (title, text) => {
 }
 
 export const UpdateMemo = (id, text) => {
-  let index = textMemos.indexOf(id)
+  let index = textMemos.findIndex(m => m.id === id)
   if (index == -1) {
-    return null
+    return
   }
 
   textMemos[index].text = text
 
-  index = memos.indexOf(id)
-  memos[index].updatedAt = Time.now()
+  index = memos.findIndex(m => m.id === id)
+  memos[index].updatedAt = Date.now()
 }
