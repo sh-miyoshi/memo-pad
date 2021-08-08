@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, FlatList } from 'react-native';
 import { Header, Icon, Overlay, Button, ListItem } from 'react-native-elements';
 import { LoadList } from './store';
-import { Dialog } from 'react-native-paper';
+import { DeleteDialog } from './delete';
 
 export const Top = ({ navigation }) => {
   const [memos, setMemos] = useState([])
@@ -46,23 +46,16 @@ export const Top = ({ navigation }) => {
 
       <MemoList memos={memos} goMemo={goMemo} setDeleteID={setDeleteID} />
 
-      <Dialog visible={deleteID != null} onDismiss={() => { setDeleteID(null) }}>
-        <Dialog.Title>削除</Dialog.Title>
-        <Dialog.Content>
-          <Text>本当に削除しますか？</Text>
-        </Dialog.Content>
-        <Dialog.Actions>
-          <Button
-            onPress={
-              () => {
-                console.log(`Delete target: ${deleteID}`)
-                setDeleteID(null)
-              }
-            }
-            title="削除"
-          />
-        </Dialog.Actions>
-      </Dialog>
+      <DeleteDialog
+        visible={deleteID != null}
+        cancel={() => { setDeleteID(null) }}
+        deleteMemo={
+          () => {
+            console.log(`Delete target: ${deleteID}`)
+            setDeleteID(null)
+          }
+        }
+      />
     </View>
   );
 }
