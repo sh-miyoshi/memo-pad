@@ -1,25 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import { TextInput, DefaultTheme } from 'react-native-paper';
-import { LoadMemo, UpdateMemo } from './store';
+import { LoadMemo, UpdateMemo, RemoveMemo } from './store';
+import { DeleteDialog } from './delete';
 
-export const Memo = ({ route }) => {
+export const Memo = ({ navigation, route }) => {
+  const [deleteID, setDeleteID] = useState(null)
+
   return (
     <View style={styles.container}>
-      <MemoHeader />
+      <MemoHeader id={route.params.id} setDeleteID={setDeleteID} />
       <MemoBody id={route.params.id} />
+
+      <DeleteDialog
+        visible={deleteID != null}
+        cancel={() => { setDeleteID(null) }}
+        deleteMemo={
+          () => {
+            console.log(`Delete target: ${deleteID}`)
+            RemoveMemo(deleteID)
+            navigation.navigate('Top')
+          }
+        }
+      />
     </View>
   )
 }
 
-const MemoHeader = () => {
+const MemoHeader = ({ id, setDeleteID }) => {
   return (
     <View>
       <Header
         rightComponent={
           <View style={styles.headerIcon}>
-            <Icon name='delete' type="antdesign" color='#ffffff' />
+            <Icon name='delete' type="antdesign" color='#ffffff' onPress={() => { setDeleteID(id) }} />
             <Icon name='menu' type="feather" color='#ffffff' style={{ marginLeft: 16 }} />
           </View>
         }
