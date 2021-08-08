@@ -29,7 +29,6 @@ const textMemos = [
 ]
 
 export const LoadList = () => {
-  console.log(`all memos: ${memos}`)
   const res = memos.concat()
   res.sort()
   return res
