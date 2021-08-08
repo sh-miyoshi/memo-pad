@@ -1,4 +1,5 @@
 // import AsyncStorage from '@react-native-async-storage/async-storage';
+import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
 const memos = [
@@ -28,7 +29,10 @@ const textMemos = [
 ]
 
 export const LoadList = () => {
-  return memos
+  console.log(`all memos: ${memos}`)
+  const res = memos.concat()
+  res.sort()
+  return res
 }
 
 export const LoadMemo = (id) => {
@@ -39,7 +43,25 @@ export const LoadMemo = (id) => {
   return { text: '' }
 }
 
-export const AddMemo = (title, text) => {
+export const UpdateMemo = (id, text) => {
+  if (id == null) {
+    if (text == null || text.length <= 0) {
+      return
+    }
+
+    const title = text.split('\n')[0]
+    addMemo(title, text)
+    return
+  }
+
+  let index = textMemos.findIndex(m => m.id === id)
+  textMemos[index].text = text
+
+  index = memos.findIndex(m => m.id === id)
+  memos[index].updatedAt = Date.now()
+}
+
+const addMemo = (title, text) => {
   const now = Date.now()
   const id = uuidv4()
 
@@ -54,16 +76,4 @@ export const AddMemo = (title, text) => {
     id: id,
     text: text,
   })
-}
-
-export const UpdateMemo = (id, text) => {
-  let index = textMemos.findIndex(m => m.id === id)
-  if (index == -1) {
-    return
-  }
-
-  textMemos[index].text = text
-
-  index = memos.findIndex(m => m.id === id)
-  memos[index].updatedAt = Date.now()
 }
