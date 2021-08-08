@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, FlatList } from 'react-native';
 import { Header, Icon, Overlay, Button, ListItem } from 'react-native-elements';
 import { LoadList } from './store';
+import { Dialog } from 'react-native-paper';
 
 export const Top = ({ navigation }) => {
   const [memos, setMemos] = useState([])
+  const [deleteID, setDeleteID] = useState(null)
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -42,7 +44,25 @@ export const Top = ({ navigation }) => {
         onPress={() => goMemo(null)}
       />
 
-      <MemoList memos={memos} goMemo={goMemo} />
+      <MemoList memos={memos} goMemo={goMemo} setDeleteID={setDeleteID} />
+
+      <Dialog visible={deleteID != null} onDismiss={() => { setDeleteID(null) }}>
+        <Dialog.Title>削除</Dialog.Title>
+        <Dialog.Content>
+          <Text>本当に削除しますか？</Text>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button
+            onPress={
+              () => {
+                console.log(`Delete target: ${deleteID}`)
+                setDeleteID(null)
+              }
+            }
+            title="削除"
+          />
+        </Dialog.Actions>
+      </Dialog>
     </View>
   );
 }
@@ -68,21 +88,22 @@ const TopHeader = () => {
   )
 }
 
-const MemoList = ({ memos, goMemo }) => {
+const MemoList = ({ memos, goMemo, setDeleteID }) => {
   return (
-    <FlatList
-      style={styles.list}
-      data={memos}
-      keyExtractor={item => `${item.id}`}
-      renderItem={({ item }) => (
-        <ListItem bottomDivider onPress={() => goMemo(item.id)}>
-          <ListItem.Content>
-            <ListItem.Title>{item.title}</ListItem.Title>
-            <ListItem.Subtitle>{formatDate(item.updatedAt)}</ListItem.Subtitle>
-          </ListItem.Content>
-        </ListItem>
-      )}
-    />
+    <View style={styles.list}>
+      <FlatList
+        data={memos}
+        keyExtractor={item => `${item.id}`}
+        renderItem={({ item }) => (
+          <ListItem bottomDivider onPress={() => goMemo(item.id)} onLongPress={() => { setDeleteID(item.id) }}>
+            <ListItem.Content>
+              <ListItem.Title>{item.title}</ListItem.Title>
+              <ListItem.Subtitle>{formatDate(item.updatedAt)}</ListItem.Subtitle>
+            </ListItem.Content>
+          </ListItem>
+        )}
+      />
+    </View>
   )
 }
 
