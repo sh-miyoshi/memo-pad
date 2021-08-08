@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, StyleSheet, FlatList } from 'react-native';
 import { Header, Icon, Overlay, Button, ListItem } from 'react-native-elements';
 import { LoadList } from './store';
 
 export const Top = ({ navigation }) => {
-  const memos = LoadList()
+  const [memos, setMemos] = useState([])
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      const m = LoadList()
+      setMemos(m)
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const goMemo = (id) => {
     if (id != null) {
@@ -33,16 +42,7 @@ export const Top = ({ navigation }) => {
         onPress={() => goMemo(null)}
       />
 
-      {
-        memos.map((memo, i) => (
-          <ListItem key={i} bottomDivider onPress={() => goMemo(memo.id)} style={{ width: '90%' }}>
-            <ListItem.Content>
-              <ListItem.Title>{memo.title}</ListItem.Title>
-              <ListItem.Subtitle>{formatDate(memo.updatedAt)}</ListItem.Subtitle>
-            </ListItem.Content>
-          </ListItem>
-        ))
-      }
+      <MemoList memos={memos} goMemo={goMemo} />
     </View>
   );
 }
@@ -68,11 +68,33 @@ const TopHeader = () => {
   )
 }
 
+const MemoList = ({ memos, goMemo }) => {
+  return (
+    <FlatList
+      style={styles.list}
+      data={memos}
+      keyExtractor={item => `${item.id}`}
+      renderItem={({ item }) => (
+        <ListItem bottomDivider onPress={() => goMemo(item.id)}>
+          <ListItem.Content>
+            <ListItem.Title>{item.title}</ListItem.Title>
+            <ListItem.Subtitle>{formatDate(item.updatedAt)}</ListItem.Subtitle>
+          </ListItem.Content>
+        </ListItem>
+      )}
+    />
+  )
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fffafa',
     alignItems: 'center',
+  },
+  list: {
+    flex: 1,
+    width: '90%'
   },
 });
 
