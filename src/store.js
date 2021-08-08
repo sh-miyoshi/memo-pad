@@ -2,7 +2,7 @@
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
-const memos = [
+let memos = [
   {
     id: "id1",
     title: "大事なもの",
@@ -17,7 +17,7 @@ const memos = [
   },
 ]
 
-const textMemos = [
+let textMemos = [
   {
     id: "id1",
     text: "大事なもの"
@@ -59,6 +59,11 @@ export const UpdateMemo = (id, text) => {
   memos[index].updatedAt = Date.now()
   memos[index].title = title
   return id
+}
+
+export const RemoveMemo = (id) => {
+  textMemos = textMemos.filter(m => m.id !== id)
+  memos = memos.filter(m => m.id !== id)
 }
 
 const addMemo = (title, text) => {

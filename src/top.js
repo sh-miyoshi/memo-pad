@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, FlatList } from 'react-native';
 import { Header, Icon, Overlay, Button, ListItem } from 'react-native-elements';
-import { LoadList } from './store';
+import { LoadList, RemoveMemo } from './store';
 import { DeleteDialog } from './delete';
 
 export const Top = ({ navigation }) => {
@@ -52,7 +52,9 @@ export const Top = ({ navigation }) => {
         deleteMemo={
           () => {
             console.log(`Delete target: ${deleteID}`)
+            RemoveMemo(deleteID)
             setDeleteID(null)
+            setMemos(LoadList())
           }
         }
       />
