@@ -44,14 +44,13 @@ export const LoadMemo = (id) => {
 }
 
 export const UpdateMemo = (id, text) => {
-  if (id == null) {
-    if (text == null || text.length <= 0) {
-      return
-    }
+  if (text == null || text.length <= 0) {
+    return null
+  }
 
-    const title = text.split('\n')[0]
-    addMemo(title, text)
-    return
+  const title = text.split('\n')[0]
+  if (id == null) {
+    return addMemo(title, text)
   }
 
   let index = textMemos.findIndex(m => m.id === id)
@@ -59,6 +58,8 @@ export const UpdateMemo = (id, text) => {
 
   index = memos.findIndex(m => m.id === id)
   memos[index].updatedAt = Date.now()
+  memos[index].title = title
+  return id
 }
 
 const addMemo = (title, text) => {
@@ -76,4 +77,6 @@ const addMemo = (title, text) => {
     id: id,
     text: text,
   })
+
+  return id
 }

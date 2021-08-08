@@ -32,6 +32,7 @@ const MemoHeader = () => {
 const MemoBody = ({ id }) => {
   const memo = LoadMemo(id)
   const [text, setText] = React.useState(memo.text);
+  const [currentID, setCurrentID] = React.useState(id);
 
   return (
     <View style={styles.textinput}>
@@ -40,7 +41,8 @@ const MemoBody = ({ id }) => {
         onChangeText={
           (text) => {
             setText(text)
-            UpdateMemo(id, text)
+            const updatedID = UpdateMemo(currentID, text)
+            setCurrentID(updatedID)
           }
         }
         multiline
