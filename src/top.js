@@ -38,12 +38,23 @@ export const Top = ({ navigation }) => {
 
       <Button
         title="Clear"
-        onPress={() => Clear()}
+        onPress={
+          async () => {
+            await Clear();
+            setMemos([]);
+          }
+        }
       />
 
       <Button
         title="AddDummy"
-        onPress={() => AddDummy()}
+        onPress={
+          async () => {
+            await AddDummy();
+            const m = await LoadList();
+            setMemos(m);
+          }
+        }
       />
 
       <Button
