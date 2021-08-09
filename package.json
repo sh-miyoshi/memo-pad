@@ -5,7 +5,8 @@
     "ios": "react-native run-ios",
     "web": "expo start --web",
     "start": "react-native start",
-    "lint": "eslint --ext .js --fix src/"
+    "lint": "eslint --ext .js --fix src/",
+    "build": "expo build:android -t app-bundle"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.5",
