@@ -11,6 +11,11 @@ export const DeleteDialog = ({ visible, cancel, deleteMemo }) => (
     </Dialog.Content>
     <Dialog.Actions>
       <Button
+        type="clear"
+        onPress={cancel}
+        title="キャンセル"
+      />
+      <Button
         onPress={deleteMemo}
         title="削除"
       />
