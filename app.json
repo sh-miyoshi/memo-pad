@@ -2,12 +2,14 @@
   "expo": {
     "name": "memo-pad",
     "slug": "memo-pad",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "assetBundlePatterns": [
       "**/*"
     ],
     "android": {
-      "package": "com.smiyoshi.memopad"
+      "package": "com.smiyoshi.memopad",
+      "permissions": [],
+      "versionCode": 10
     }
   },
   "name": "memo-pad"
