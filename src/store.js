@@ -74,6 +74,44 @@ export const RemoveMemo = async (id) => {
   }
 };
 
+export const Clear = async () => {
+  await AsyncStorage.clear();
+};
+
+export const AddDummy = async () => {
+  await AsyncStorage.removeItem('memos');
+  await AsyncStorage.removeItem('memo_details');
+
+  const now = Date.now();
+  const memos = [
+    {
+      id: 'id1',
+      title: 'テストデータ1',
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: 'id2',
+      title: 'ダミーデータ',
+      createdAt: now,
+      updatedAt: now,
+    },
+  ];
+  await AsyncStorage.setItem('memos', JSON.stringify(memos));
+
+  const memoDetails = [
+    {
+      id: 'id1',
+      text: 'テストデータ1',
+    },
+    {
+      id: 'id2',
+      text: 'ダミーデータ',
+    },
+  ];
+  await AsyncStorage.setItem('memo_details', JSON.stringify(memoDetails));
+};
+
 const addMemo = async (title, text) => {
   const now = Date.now();
   let id = uuidv4();

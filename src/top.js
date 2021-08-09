@@ -5,7 +5,9 @@ import {
 import {
   Header, Icon, Overlay, Button, ListItem,
 } from 'react-native-elements';
-import { LoadList, RemoveMemo } from './store';
+import {
+  LoadList, RemoveMemo, Clear, AddDummy,
+} from './store';
 import { DeleteDialog } from './delete';
 
 export const Top = ({ navigation }) => {
@@ -33,6 +35,16 @@ export const Top = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <TopHeader />
+
+      <Button
+        title="Clear"
+        onPress={() => Clear()}
+      />
+
+      <Button
+        title="AddDummy"
+        onPress={() => AddDummy()}
+      />
 
       <Button
         icon={(
