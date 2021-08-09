@@ -72,13 +72,17 @@ export const RemoveMemo = async (id) => {
 
   let memos = await AsyncStorage.getItem('memo_details');
   if (memos != null) {
-    const res = JSON.parse(memos).memo.filter((m) => m.id !== id);
-    await AsyncStorage.mergeItem('memo_details', JSON.stringify(res));
+    memos = JSON.parse(memos);
+    const removed = memos.memo.filter((m) => m.id !== id);
+    memos.memo = removed;
+    await AsyncStorage.mergeItem('memo_details', JSON.stringify(memos));
   }
   memos = await AsyncStorage.getItem('memos');
   if (memos != null) {
-    const res = JSON.parse(memos).memo.filter((m) => m.id !== id);
-    await AsyncStorage.mergeItem('memos', JSON.stringify(res));
+    memos = JSON.parse(memos);
+    const removed = memos.memo.filter((m) => m.id !== id);
+    memos.memo = removed;
+    await AsyncStorage.mergeItem('memos', JSON.stringify(memos));
   }
 };
 
