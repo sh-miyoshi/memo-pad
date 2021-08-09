@@ -9,6 +9,7 @@ import {
   LoadList, RemoveMemo, Clear, AddDummy,
 } from './store';
 import { DeleteDialog } from './delete';
+import { ENABLE_DEV_FEATURE } from './env';
 
 export const Top = ({ navigation }) => {
   const [memos, setMemos] = useState([]);
@@ -36,26 +37,30 @@ export const Top = ({ navigation }) => {
     <View style={styles.container}>
       <TopHeader />
 
-      <Button
-        title="Clear"
-        onPress={
-          async () => {
-            await Clear();
-            setMemos([]);
-          }
-        }
-      />
+      {ENABLE_DEV_FEATURE && (
+        <View>
+          <Button
+            title="Clear"
+            onPress={
+              async () => {
+                await Clear();
+                setMemos([]);
+              }
+            }
+          />
 
-      <Button
-        title="AddDummy"
-        onPress={
-          async () => {
-            await AddDummy();
-            const m = await LoadList();
-            setMemos(m);
-          }
-        }
-      />
+          <Button
+            title="AddDummy"
+            onPress={
+              async () => {
+                await AddDummy();
+                const m = await LoadList();
+                setMemos(m);
+              }
+            }
+          />
+        </View>
+      )}
 
       <Button
         icon={(
