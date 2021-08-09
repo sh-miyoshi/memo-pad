@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, FlatList } from 'react-native';
-import { Header, Icon, Overlay, Button, ListItem } from 'react-native-elements';
+import {
+  Text, View, StyleSheet, FlatList,
+} from 'react-native';
+import {
+  Header, Icon, Overlay, Button, ListItem,
+} from 'react-native-elements';
 import { LoadList, RemoveMemo } from './store';
 import { DeleteDialog } from './delete';
 
 export const Top = ({ navigation }) => {
-  const [memos, setMemos] = useState([])
-  const [deleteID, setDeleteID] = useState(null)
+  const [memos, setMemos] = useState([]);
+  const [deleteID, setDeleteID] = useState(null);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', async () => {
-      const m = await LoadList()
-      setMemos(m)
+      const m = await LoadList();
+      setMemos(m);
     });
 
     return unsubscribe;
@@ -19,28 +23,28 @@ export const Top = ({ navigation }) => {
 
   const goMemo = (id) => {
     if (id != null) {
-      console.log("Edit " + id)
+      console.log(`Edit ${id}`);
     } else {
-      console.log("Create new memo")
+      console.log('Create new memo');
     }
-    navigation.navigate('Memo', { id: id })
-  }
+    navigation.navigate('Memo', { id });
+  };
 
   return (
     <View style={styles.container}>
       <TopHeader />
 
       <Button
-        icon={
+        icon={(
           <Icon
             name="pluscircleo"
             type="antdesign"
             color="black"
           />
-        }
+        )}
         title="新しいメモを追加"
-        titleStyle={{ color: "black", padding: 10 }}
-        buttonStyle={{ backgroundColor: "#d3d3d3", margin: 10 }}
+        titleStyle={{ color: 'black', padding: 10 }}
+        buttonStyle={{ backgroundColor: '#d3d3d3', margin: 10 }}
         onPress={() => goMemo(null)}
       />
 
@@ -48,32 +52,32 @@ export const Top = ({ navigation }) => {
 
       <DeleteDialog
         visible={deleteID != null}
-        cancel={() => { setDeleteID(null) }}
+        cancel={() => { setDeleteID(null); }}
         deleteMemo={
           async () => {
-            console.log(`Delete target: ${deleteID}`)
-            await RemoveMemo(deleteID)
-            setDeleteID(null)
-            const m = await LoadList()
-            setMemos(m)
+            console.log(`Delete target: ${deleteID}`);
+            await RemoveMemo(deleteID);
+            setDeleteID(null);
+            const m = await LoadList();
+            setMemos(m);
           }
         }
       />
     </View>
   );
-}
+};
 
 const TopHeader = () => {
   const [menuShow, setMenuShow] = useState(false);
   const toggleMenu = () => {
-    setMenuShow(!menuShow)
-  }
+    setMenuShow(!menuShow);
+  };
 
   return (
     <View>
       <Header
         centerComponent={{ text: 'メモ帳', style: { color: '#ffffff' } }}
-        rightComponent={<Icon name='menu' type="feather" color='#ffffff' onPress={toggleMenu} />}
+        rightComponent={<Icon name="menu" type="feather" color="#ffffff" onPress={toggleMenu} />}
         containerStyle={{ backgroundColor: '#808080' }}
       />
       <Overlay isVisible={menuShow} onBackdropPress={toggleMenu}>
@@ -81,27 +85,25 @@ const TopHeader = () => {
         <Text>・文字の大きさ</Text>
       </Overlay>
     </View>
-  )
-}
+  );
+};
 
-const MemoList = ({ memos, goMemo, setDeleteID }) => {
-  return (
-    <View style={styles.list}>
-      <FlatList
-        data={memos}
-        keyExtractor={item => `${item.id}`}
-        renderItem={({ item }) => (
-          <ListItem bottomDivider onPress={() => goMemo(item.id)} onLongPress={() => { setDeleteID(item.id) }}>
-            <ListItem.Content>
-              <ListItem.Title>{item.title}</ListItem.Title>
-              <ListItem.Subtitle>{formatDate(item.updatedAt)}</ListItem.Subtitle>
-            </ListItem.Content>
-          </ListItem>
-        )}
-      />
-    </View>
-  )
-}
+const MemoList = ({ memos, goMemo, setDeleteID }) => (
+  <View style={styles.list}>
+    <FlatList
+      data={memos}
+      keyExtractor={(item) => `${item.id}`}
+      renderItem={({ item }) => (
+        <ListItem bottomDivider onPress={() => goMemo(item.id)} onLongPress={() => { setDeleteID(item.id); }}>
+          <ListItem.Content>
+            <ListItem.Title>{item.title}</ListItem.Title>
+            <ListItem.Subtitle>{formatDate(item.updatedAt)}</ListItem.Subtitle>
+          </ListItem.Content>
+        </ListItem>
+      )}
+    />
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -111,11 +113,11 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
-    width: '90%'
+    width: '90%',
   },
 });
 
 const formatDate = (date) => {
-  const d = new Date(date)
-  return d.getFullYear() + '/' + ('0' + (d.getMonth() + 1)).slice(-2) + '/' + ('0' + d.getDate()).slice(-2) + ' ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2)
-}
+  const d = new Date(date);
+  return `${d.getFullYear()}/${(`0${d.getMonth() + 1}`).slice(-2)}/${(`0${d.getDate()}`).slice(-2)} ${(`0${d.getHours()}`).slice(-2)}:${(`0${d.getMinutes()}`).slice(-2)}:${(`0${d.getSeconds()}`).slice(-2)}`;
+};

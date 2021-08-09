@@ -6,7 +6,7 @@ import { LoadMemo, UpdateMemo, RemoveMemo } from './store';
 import { DeleteDialog } from './delete';
 
 export const Memo = ({ navigation, route }) => {
-  const [deleteID, setDeleteID] = useState(null)
+  const [deleteID, setDeleteID] = useState(null);
 
   return (
     <View style={styles.container}>
@@ -15,34 +15,32 @@ export const Memo = ({ navigation, route }) => {
 
       <DeleteDialog
         visible={deleteID != null}
-        cancel={() => { setDeleteID(null) }}
+        cancel={() => { setDeleteID(null); }}
         deleteMemo={
           async () => {
-            console.log(`Delete target: ${deleteID}`)
-            await RemoveMemo(deleteID)
-            navigation.navigate('Top')
+            console.log(`Delete target: ${deleteID}`);
+            await RemoveMemo(deleteID);
+            navigation.navigate('Top');
           }
         }
       />
     </View>
-  )
-}
+  );
+};
 
-const MemoHeader = ({ id, setDeleteID }) => {
-  return (
-    <View>
-      <Header
-        rightComponent={
-          <View style={styles.headerIcon}>
-            <Icon name='delete' type="antdesign" color='#ffffff' onPress={() => { setDeleteID(id) }} />
-            <Icon name='menu' type="feather" color='#ffffff' style={{ marginLeft: 16 }} />
-          </View>
-        }
-        containerStyle={{ backgroundColor: '#808080' }}
-      />
-    </View>
-  )
-}
+const MemoHeader = ({ id, setDeleteID }) => (
+  <View>
+    <Header
+      rightComponent={(
+        <View style={styles.headerIcon}>
+          <Icon name="delete" type="antdesign" color="#ffffff" onPress={() => { setDeleteID(id); }} />
+          <Icon name="menu" type="feather" color="#ffffff" style={{ marginLeft: 16 }} />
+        </View>
+      )}
+      containerStyle={{ backgroundColor: '#808080' }}
+    />
+  </View>
+);
 
 const MemoBody = ({ id }) => {
   const [text, setText] = React.useState('');
@@ -50,21 +48,21 @@ const MemoBody = ({ id }) => {
 
   useEffect(() => {
     const load = async () => {
-      const memo = await LoadMemo(id)
-      setText(memo.text)
-    }
-    load()
-  }, [])
+      const memo = await LoadMemo(id);
+      setText(memo.text);
+    };
+    load();
+  }, []);
 
   return (
     <View style={styles.textinput}>
       <TextInput
         value={text}
         onChangeText={
-          async (text) => {
-            setText(text)
-            const updatedID = await UpdateMemo(currentID, text)
-            setCurrentID(updatedID)
+          async (newText) => {
+            setText(newText);
+            const updatedID = await UpdateMemo(currentID, newText);
+            setCurrentID(updatedID);
           }
         }
         multiline
@@ -72,8 +70,8 @@ const MemoBody = ({ id }) => {
         theme={textTheme}
       />
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -83,11 +81,11 @@ const styles = StyleSheet.create({
   },
 
   headerIcon: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
 
   textinput: {
-    width: '90%'
+    width: '90%',
   },
 });
 
@@ -95,6 +93,6 @@ const textTheme = {
   ...DefaultTheme,
   colors: {
     primary: '#000000',
-    background: '#fafafa'
-  }
-}
+    background: '#fafafa',
+  },
+};
