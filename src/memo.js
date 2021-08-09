@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import { TextInput, DefaultTheme } from 'react-native-paper';
@@ -17,9 +17,9 @@ export const Memo = ({ navigation, route }) => {
         visible={deleteID != null}
         cancel={() => { setDeleteID(null) }}
         deleteMemo={
-          () => {
+          async () => {
             console.log(`Delete target: ${deleteID}`)
-            RemoveMemo(deleteID)
+            await RemoveMemo(deleteID)
             navigation.navigate('Top')
           }
         }
@@ -45,18 +45,25 @@ const MemoHeader = ({ id, setDeleteID }) => {
 }
 
 const MemoBody = ({ id }) => {
-  const memo = LoadMemo(id)
-  const [text, setText] = React.useState(memo.text);
+  const [text, setText] = React.useState('');
   const [currentID, setCurrentID] = React.useState(id);
+
+  useEffect(() => {
+    const load = async () => {
+      const memo = await LoadMemo(id)
+      setText(memo.text)
+    }
+    load()
+  }, [])
 
   return (
     <View style={styles.textinput}>
       <TextInput
         value={text}
         onChangeText={
-          (text) => {
+          async (text) => {
             setText(text)
-            const updatedID = UpdateMemo(currentID, text)
+            const updatedID = await UpdateMemo(currentID, text)
             setCurrentID(updatedID)
           }
         }

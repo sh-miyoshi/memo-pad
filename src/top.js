@@ -9,8 +9,8 @@ export const Top = ({ navigation }) => {
   const [deleteID, setDeleteID] = useState(null)
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      const m = LoadList()
+    const unsubscribe = navigation.addListener('focus', async () => {
+      const m = await LoadList()
       setMemos(m)
     });
 
@@ -50,11 +50,12 @@ export const Top = ({ navigation }) => {
         visible={deleteID != null}
         cancel={() => { setDeleteID(null) }}
         deleteMemo={
-          () => {
+          async () => {
             console.log(`Delete target: ${deleteID}`)
-            RemoveMemo(deleteID)
+            await RemoveMemo(deleteID)
             setDeleteID(null)
-            setMemos(LoadList())
+            const m = await LoadList()
+            setMemos(m)
           }
         }
       />
