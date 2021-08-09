@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 export const LoadList = async () => {
   try {
     const memos = await AsyncStorage.getItem('memos');
-    return memos != null ? JSON.parse(memos).memo : [];
+    return memos != null ? JSON.parse(memos).memo.sort((a, b) => b.updatedAt - a.updatedAt) : [];
   } catch (e) {
     // error reading value
     console.log(`Load memo list failed: ${e}`);
