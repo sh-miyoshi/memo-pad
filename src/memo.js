@@ -4,6 +4,7 @@ import { Header, Icon } from 'react-native-elements';
 import { TextInput, DefaultTheme } from 'react-native-paper';
 import { LoadMemo, UpdateMemo, RemoveMemo } from './store';
 import { DeleteDialog } from './delete';
+import { ENABLE_DEV_FEATURE } from './env';
 
 export const Memo = ({ navigation, route }) => {
   const [deleteID, setDeleteID] = useState(null);
@@ -34,7 +35,7 @@ const MemoHeader = ({ id, setDeleteID }) => (
       rightComponent={(
         <View style={styles.headerIcon}>
           <Icon name="delete" type="antdesign" color="#ffffff" onPress={() => { setDeleteID(id); }} />
-          <Icon name="menu" type="feather" color="#ffffff" style={{ marginLeft: 16 }} />
+          {ENABLE_DEV_FEATURE && <Icon name="menu" type="feather" color="#ffffff" style={{ marginLeft: 16 }} />}
         </View>
       )}
       containerStyle={{ backgroundColor: '#808080' }}

@@ -105,7 +105,9 @@ const TopHeader = () => {
     <View>
       <Header
         centerComponent={{ text: 'メモ帳', style: { color: '#ffffff' } }}
-        rightComponent={<Icon name="menu" type="feather" color="#ffffff" onPress={toggleMenu} />}
+        rightComponent={
+          ENABLE_DEV_FEATURE && (<Icon name="menu" type="feather" color="#ffffff" onPress={toggleMenu} />)
+        }
         containerStyle={{ backgroundColor: '#808080' }}
       />
       <Overlay isVisible={menuShow} onBackdropPress={toggleMenu}>
