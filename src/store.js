@@ -34,7 +34,7 @@ export const LoadMemo = async (id) => {
 export const UpdateMemo = async (id, text) => {
   console.log(`Update memo ${id}`);
 
-  if (text == null || text.length <= 0) {
+  if (typeof text !== 'string') {
     return null;
   }
 
