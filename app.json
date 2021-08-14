@@ -3,7 +3,7 @@
     "name": "メモマ",
     "slug": "memo-pad",
     "version": "0.1.1",
-    "icon": "./assets/icon.jpeg",
+    "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png"
     },
