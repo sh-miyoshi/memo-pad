@@ -5,11 +5,12 @@ import {
 import {
   Header, Icon, Overlay, Button, ListItem,
 } from 'react-native-elements';
+import { AdMobBanner } from 'expo-ads-admob';
 import {
   LoadList, RemoveMemo, Clear, AddDummy,
 } from './store';
 import { DeleteDialog } from './delete';
-import { ENABLE_DEV_FEATURE } from './env';
+import { ENABLE_DEV_FEATURE, AD_UNIT_ID } from './env';
 
 export const Top = ({ navigation }) => {
   const [memos, setMemos] = useState([]);
@@ -31,6 +32,10 @@ export const Top = ({ navigation }) => {
       console.log('Create new memo');
     }
     navigation.navigate('Memo', { id });
+  };
+
+  const bannerError = () => {
+    console.log('Ad Fail error');
   };
 
   return (
@@ -77,6 +82,12 @@ export const Top = ({ navigation }) => {
       />
 
       <MemoList memos={memos} goMemo={goMemo} setDeleteID={setDeleteID} />
+
+      <AdMobBanner
+        bannerSize="fullBanner"
+        adUnitID={AD_UNIT_ID}
+        onDidFailToReceiveAdWithError={bannerError}
+      />
 
       <DeleteDialog
         visible={deleteID != null}
