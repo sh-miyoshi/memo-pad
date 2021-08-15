@@ -1,14 +1,24 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
+import Storage from 'react-native-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 
-export const LoadList = async () => {
+const storage = new Storage({
+  storageBackend: AsyncStorage,
+  defaultExpires: null,
+  enableCache: true,
+});
+
+export const LoadMemoList = async () => {
   try {
-    const memos = await AsyncStorage.getItem('memos');
-    return memos != null ? JSON.parse(memos).memo.sort((a, b) => b.updatedAt - a.updatedAt) : [];
-  } catch (e) {
+    const memos = await storage.load({ key: 'memos' });
+    return memos.sort((a, b) => b.updatedAt - a.updatedAt);
+  } catch (err) {
+    if (err.name === 'NotFoundError') {
+      return [];
+    }
     // error reading value
-    console.log(`Load memo list failed: ${e}`);
+    console.log(`Load memo list failed: ${err}`);
   }
   return [];
 };
@@ -17,16 +27,16 @@ export const LoadMemo = async (id) => {
   console.log(`Load memo ${id}`);
 
   try {
-    const memos = await AsyncStorage.getItem('memo_details');
-    if (memos != null) {
-      const memo = JSON.parse(memos).memo.find((m) => m.id === id);
-      if (memo != null) {
-        return memo;
-      }
+    return await storage.load({
+      key: 'memo_details',
+      id,
+    });
+  } catch (err) {
+    if (err.name === 'NotFoundError') {
+      return { text: '' };
     }
-  } catch (e) {
     // error reading value
-    console.log(`Load memo failed: ${e}`);
+    console.log(`Load memo failed: ${err}`);
   }
   return { text: '' };
 };
@@ -44,87 +54,90 @@ export const UpdateMemo = async (id, text) => {
   }
 
   try {
-    let memos = await AsyncStorage.getItem('memo_details');
-    if (memos != null) {
-      memos = JSON.parse(memos);
-      const index = memos.memo.findIndex((m) => m.id === id);
-      memos.memo[index].text = text;
-      await AsyncStorage.mergeItem('memo_details', JSON.stringify(memos));
-    }
+    let memo = await storage.load({
+      key: 'memo_details',
+      id,
+    });
+    memo.text = text;
+    await storage.save({
+      key: 'memo_details',
+      id,
+      data: memo,
+    });
 
-    memos = await AsyncStorage.getItem('memos');
-    if (memos != null) {
-      memos = JSON.parse(memos);
-      const index = memos.memo.findIndex((m) => m.id === id);
-      memos.memo[index].updatedAt = Date.now();
-      memos.memo[index].title = title;
-      await AsyncStorage.mergeItem('memos', JSON.stringify(memos));
+    memo = await storage.load({
+      key: 'memos',
+      id,
+    });
+    memo.updatedAt = Date.now();
+    memo.title = title;
+    storage.save({
+      key: 'memos',
+      id,
+      data: memo,
+    });
+  } catch (err) {
+    if (err.name === 'NotFoundError') {
+      return id;
     }
-  } catch (e) {
-    console.log(`Update memo failed: ${e}`);
+    console.log(`Update memo failed: ${err}`);
   }
 
   return id;
 };
 
-export const RemoveMemo = async (id) => {
+export const RemoveMemo = (id) => {
   console.log(`Remove memo ${id}`);
 
-  let memos = await AsyncStorage.getItem('memo_details');
-  if (memos != null) {
-    memos = JSON.parse(memos);
-    const removed = memos.memo.filter((m) => m.id !== id);
-    memos.memo = removed;
-    await AsyncStorage.mergeItem('memo_details', JSON.stringify(memos));
-  }
-  memos = await AsyncStorage.getItem('memos');
-  if (memos != null) {
-    memos = JSON.parse(memos);
-    const removed = memos.memo.filter((m) => m.id !== id);
-    memos.memo = removed;
-    await AsyncStorage.mergeItem('memos', JSON.stringify(memos));
-  }
+  storage.remove({
+    key: 'memo_details',
+    id,
+  });
+  storage.remove({
+    key: 'memos',
+    id,
+  });
 };
 
 export const Clear = async () => {
-  await AsyncStorage.clear();
+  await storage.clearMap();
 };
 
 export const AddDummy = async () => {
   await Clear();
 
-  const now = Date.now();
-  const memos = {
-    memo: [
-      {
-        id: 'id1',
-        title: 'テストデータ1',
-        createdAt: now,
-        updatedAt: now,
-      },
-      {
-        id: 'id2',
-        title: 'ダミーデータ',
-        createdAt: now,
-        updatedAt: now,
-      },
-    ],
-  };
-  await AsyncStorage.setItem('memos', JSON.stringify(memos));
+  // const now = Date.now();
+  // const memos = {
+  //   memo: [
+  //     {
+  //       id: 'id1',
+  //       title: 'テストデータ1',
+  //       createdAt: now,
+  //       updatedAt: now,
+  //     },
+  //     {
+  //       id: 'id2',
+  //       title: 'ダミーデータ',
+  //       createdAt: now,
+  //       updatedAt: now,
+  //     },
+  //   ],
+  // };
+  // await AsyncStorage.setItem('memos', JSON.stringify(memos));
 
-  const memoDetails = {
-    memo: [
-      {
-        id: 'id1',
-        text: 'テストデータ1',
-      },
-      {
-        id: 'id2',
-        text: 'ダミーデータ',
-      },
-    ],
-  };
-  await AsyncStorage.setItem('memo_details', JSON.stringify(memoDetails));
+  // const memoDetails = {
+  //   memo: [
+  //     {
+  //       id: 'id1',
+  //       text: 'テストデータ1',
+  //     },
+  //     {
+  //       id: 'id2',
+  //       text: 'ダミーデータ',
+  //     },
+  //   ],
+  // };
+  // await AsyncStorage.setItem('memo_details', JSON.stringify(memoDetails));
 };
 
 const addMemo = async (title, text) => {
@@ -132,33 +145,25 @@ const addMemo = async (title, text) => {
   let id = uuidv4();
 
   try {
-    let memos = await AsyncStorage.getItem('memos');
-    let memo = {
+    storage.save({
+      key: 'memos',
       id,
-      title,
-      createdAt: now,
-      updatedAt: now,
-    };
-    if (memos == null) {
-      await AsyncStorage.setItem('memos', JSON.stringify({ memo: [memo] }));
-    } else {
-      memos = JSON.parse(memos);
-      memos.memo.push(memo);
-      await AsyncStorage.mergeItem('memos', JSON.stringify(memos));
-    }
+      data: {
+        id,
+        title,
+        createdAt: now,
+        updatedAt: now,
+      },
+    });
 
-    let memoDetails = await AsyncStorage.getItem('memo_details');
-    memo = {
+    storage.save({
+      key: 'memo_details',
       id,
-      text,
-    };
-    if (memoDetails == null) {
-      await AsyncStorage.setItem('memo_details', JSON.stringify({ memo: [memo] }));
-    } else {
-      memoDetails = JSON.parse(memoDetails);
-      memoDetails.memo.push(memo);
-      await AsyncStorage.mergeItem('memo_details', JSON.stringify(memoDetails));
-    }
+      data: {
+        id,
+        text,
+      },
+    });
   } catch (e) {
     // saving error
     console.log(`Add memo failed: ${e}`);

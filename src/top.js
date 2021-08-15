@@ -7,7 +7,7 @@ import {
 } from 'react-native-elements';
 import { AdMobBanner } from 'expo-ads-admob';
 import {
-  LoadList, RemoveMemo, Clear, AddDummy,
+  LoadMemoList, RemoveMemo, Clear, AddDummy,
 } from './store';
 import { DeleteDialog } from './delete';
 import { ENABLE_DEV_FEATURE, AD_UNIT_ID } from './env';
@@ -18,7 +18,7 @@ export const Top = ({ navigation }) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', async () => {
-      const m = await LoadList();
+      const m = await LoadMemoList();
       setMemos(m);
     });
 
@@ -59,7 +59,7 @@ export const Top = ({ navigation }) => {
             onPress={
               async () => {
                 await AddDummy();
-                const m = await LoadList();
+                const m = await LoadMemoList();
                 setMemos(m);
               }
             }
@@ -97,7 +97,7 @@ export const Top = ({ navigation }) => {
             console.log(`Delete target: ${deleteID}`);
             await RemoveMemo(deleteID);
             setDeleteID(null);
-            const m = await LoadList();
+            const m = await LoadMemoList();
             setMemos(m);
           }
         }
