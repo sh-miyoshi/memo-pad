@@ -8,9 +8,9 @@ import {
 import { AdMobBanner } from 'expo-ads-admob';
 import {
   LoadMemoList, RemoveMemo, Clear, AddDummy,
-} from './store';
-import { DeleteDialog } from './delete';
-import { ENABLE_DEV_FEATURE, AD_UNIT_ID } from './env';
+} from '../store';
+import { DeleteDialog } from '../components/delete';
+import { ENABLE_DEV_FEATURE, AD_UNIT_ID } from '../env';
 
 export const Top = ({ navigation }) => {
   const [memos, setMemos] = useState([]);
