@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
-export const LoadList = async () => {
+export const LoadMemoList = async () => {
   try {
     const memos = await AsyncStorage.getItem('memos');
     return memos != null ? JSON.parse(memos).memo.sort((a, b) => b.updatedAt - a.updatedAt) : [];
