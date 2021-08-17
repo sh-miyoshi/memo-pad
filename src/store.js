@@ -2,6 +2,30 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
+/*
+
+memos = {
+  memo: [
+    {
+      id: string,
+      title: string,
+      createdAt: Date,
+      updatedAt: Date
+    }
+  ]
+}
+memo_details = {
+  memo: [
+    {
+      id: string,
+      text: string,
+      images: []string
+    }
+  ]
+}
+
+*/
+
 export const LoadMemoList = async () => {
   try {
     const memos = await AsyncStorage.getItem('memos');
@@ -117,10 +141,12 @@ export const AddDummy = async () => {
       {
         id: 'id1',
         text: 'テストデータ1',
+        images: [],
       },
       {
         id: 'id2',
         text: 'ダミーデータ',
+        images: [],
       },
     ],
   };
@@ -151,6 +177,7 @@ const addMemo = async (title, text) => {
     memo = {
       id,
       text,
+      images: [],
     };
     if (memoDetails == null) {
       await AsyncStorage.setItem('memo_details', JSON.stringify({ memo: [memo] }));
