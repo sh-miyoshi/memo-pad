@@ -1,18 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Header, Icon } from 'react-native-elements';
+import { Header, Icon, Button } from 'react-native-elements';
 import { TextInput, DefaultTheme } from 'react-native-paper';
-import { LoadMemo, UpdateMemo, RemoveMemo } from '../store';
+import * as ImagePicker from 'expo-image-picker';
+import {
+  LoadMemo, UpdateMemo, RemoveMemo, AddImage,
+} from '../store';
 import { DeleteDialog } from '../components/delete';
 import { ENABLE_DEV_FEATURE } from '../env';
 
 export const Memo = ({ navigation, route }) => {
   const [deleteID, setDeleteID] = useState(null);
 
+  const addImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: false,
+    });
+
+    if (!result.cancelled) {
+      console.log(`pick image path: ${result.uri}`);
+      AddImage(route.params.id, result.uri);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <MemoHeader id={route.params.id} setDeleteID={setDeleteID} />
       <MemoBody id={route.params.id} />
+
+      <Button
+        title="画像をピン止め"
+        titleStyle={{ color: 'black', padding: 10 }}
+        buttonStyle={{ backgroundColor: '#d3d3d3', margin: 10 }}
+        onPress={addImage}
+      />
 
       <DeleteDialog
         visible={deleteID != null}

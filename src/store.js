@@ -110,6 +110,20 @@ export const RemoveMemo = async (id) => {
   }
 };
 
+export const AddImage = async (memoID, path) => {
+  let memos = await AsyncStorage.getItem('memo_details');
+  if (memos != null) {
+    memos = JSON.parse(memos);
+    const index = memos.memo.findIndex((m) => m.id === memoID);
+    if (memos.memo[index].images == null) {
+      memos.memo[index].images = [path];
+    } else {
+      memos.memo[index].images.push(path);
+    }
+    await AsyncStorage.mergeItem('memo_details', JSON.stringify(memos));
+  }
+};
+
 export const Clear = async () => {
   await AsyncStorage.clear();
 };
