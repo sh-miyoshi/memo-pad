@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import {
+  View, StyleSheet, FlatList, Image,
+} from 'react-native';
 import { Header, Icon, Button } from 'react-native-elements';
 import { TextInput, DefaultTheme } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
@@ -11,6 +13,12 @@ import { ENABLE_DEV_FEATURE } from '../env';
 
 export const Memo = ({ navigation, route }) => {
   const [deleteID, setDeleteID] = useState(null);
+  const [images, setImages] = useState([]);
+
+  const loadImages = async () => {
+    const memo = await LoadMemo(route.params.id);
+    setImages(memo.images);
+  };
 
   const addImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -19,9 +27,14 @@ export const Memo = ({ navigation, route }) => {
 
     if (!result.cancelled) {
       console.log(`pick image path: ${result.uri}`);
-      AddImage(route.params.id, result.uri);
+      await AddImage(route.params.id, result.uri);
+      await loadImages();
     }
   };
+
+  useEffect(() => {
+    loadImages();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -34,6 +47,8 @@ export const Memo = ({ navigation, route }) => {
         buttonStyle={{ backgroundColor: '#d3d3d3', margin: 10 }}
         onPress={addImage}
       />
+
+      <ImageList images={images} />
 
       <DeleteDialog
         visible={deleteID != null}
@@ -65,8 +80,8 @@ const MemoHeader = ({ id, setDeleteID }) => (
 );
 
 const MemoBody = ({ id }) => {
-  const [text, setText] = React.useState('');
-  const [currentID, setCurrentID] = React.useState(id);
+  const [text, setText] = useState('');
+  const [currentID, setCurrentID] = useState(id);
 
   useEffect(() => {
     const load = async () => {
@@ -94,6 +109,24 @@ const MemoBody = ({ id }) => {
     </View>
   );
 };
+
+const ImageList = ({ images }) => (
+  <View>
+    <FlatList
+      data={images}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => (
+        <Image
+          source={{
+            width: 200,
+            height: 200,
+            uri: item.uri,
+          }}
+        />
+      )}
+    />
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {

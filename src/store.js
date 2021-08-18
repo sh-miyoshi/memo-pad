@@ -19,7 +19,12 @@ memo_details = {
     {
       id: string,
       text: string,
-      images: []string
+      images: [
+        {
+          id: string,
+          uri: string
+        }
+      ]
     }
   ]
 }
@@ -115,10 +120,14 @@ export const AddImage = async (memoID, path) => {
   if (memos != null) {
     memos = JSON.parse(memos);
     const index = memos.memo.findIndex((m) => m.id === memoID);
+    const info = {
+      id: uuidv4(),
+      uri: path,
+    };
     if (memos.memo[index].images == null) {
-      memos.memo[index].images = [path];
+      memos.memo[index].images = [info];
     } else {
-      memos.memo[index].images.push(path);
+      memos.memo[index].images.push(info);
     }
     await AsyncStorage.mergeItem('memo_details', JSON.stringify(memos));
   }
