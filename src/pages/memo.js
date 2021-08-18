@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, FlatList } from 'react-native';
 import {
-  View, StyleSheet, FlatList, Image,
-} from 'react-native';
-import { Header, Icon, Button } from 'react-native-elements';
+  Header, Icon, Button, Image,
+} from 'react-native-elements';
 import { TextInput, DefaultTheme } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import {
@@ -105,22 +105,25 @@ const MemoBody = ({ id }) => {
         multiline
         placeholder="メモ内容(自動保存されます)"
         theme={textTheme}
+        numberOfLines={15}
       />
     </View>
   );
 };
 
 const ImageList = ({ images }) => (
-  <View>
+  <View style={styles.imageArea}>
     <FlatList
       data={images}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
         <Image
           source={{
+            uri: item.uri,
+          }}
+          style={{
             width: 200,
             height: 200,
-            uri: item.uri,
           }}
         />
       )}
@@ -141,6 +144,11 @@ const styles = StyleSheet.create({
 
   textinput: {
     width: '90%',
+    margin: 10,
+  },
+
+  imageArea: {
+    height: 250,
   },
 });
 
