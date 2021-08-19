@@ -125,12 +125,31 @@ export const AddImage = async (memoID, path) => {
       uri: path,
     };
     if (memos.memo[index].images == null) {
-      memos.memo[index].images = [info];
-    } else {
-      memos.memo[index].images.push(info);
+      memos.memo[index].images = [];
     }
+    memos.memo[index].images.push(info);
     await AsyncStorage.mergeItem('memo_details', JSON.stringify(memos));
   }
+};
+
+export const LoadImage = async (memoID, imageID) => {
+  if (imageID == null || imageID.length <= 0) {
+    return {};
+  }
+
+  console.log(`load image for memo: ${memoID}, image: ${imageID}`);
+  const memo = await LoadMemo(memoID);
+  if (memo.images != null) {
+    let res = {};
+    memo.images.forEach((image) => {
+      if (image.id === imageID) {
+        res = image;
+      }
+    });
+    console.log(`target image: ${JSON.stringify(res)}`);
+    return res;
+  }
+  return {};
 };
 
 export const Clear = async () => {

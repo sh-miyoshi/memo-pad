@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
 import {
-  Header, Icon, Button, Image,
+  View, StyleSheet, FlatList, Dimensions,
+} from 'react-native';
+import {
+  Header, Icon, Button, Image, Overlay,
 } from 'react-native-elements';
 import { TextInput, DefaultTheme } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
+import ImageZoom from 'react-native-image-pan-zoom';
 import {
-  LoadMemo, UpdateMemo, RemoveMemo, AddImage,
+  LoadMemo, UpdateMemo, RemoveMemo, AddImage, LoadImage,
 } from '../store';
 import { DeleteDialog } from '../components/delete';
 import { ENABLE_DEV_FEATURE } from '../env';
@@ -14,6 +17,7 @@ import { ENABLE_DEV_FEATURE } from '../env';
 export const Memo = ({ navigation, route }) => {
   const [deleteID, setDeleteID] = useState(null);
   const [images, setImages] = useState([]);
+  const [viewImageURI, setViewImageURI] = useState('');
 
   const loadImages = async () => {
     const memo = await LoadMemo(route.params.id);
@@ -48,7 +52,7 @@ export const Memo = ({ navigation, route }) => {
         onPress={addImage}
       />
 
-      <ImageList images={images} />
+      <ImageList images={images} setViewImageURI={setViewImageURI} memoID={route.params.id} />
 
       <DeleteDialog
         visible={deleteID != null}
@@ -61,6 +65,25 @@ export const Memo = ({ navigation, route }) => {
           }
         }
       />
+
+      <Overlay isVisible={viewImageURI !== ''} onBackdropPress={() => { setViewImageURI(''); }}>
+        <ImageZoom
+          cropWidth={Dimensions.get('window').width}
+          cropHeight={Dimensions.get('window').height}
+          imageWidth={Dimensions.get('window').width}
+          imageHeight={Dimensions.get('window').height}
+        >
+          <Image
+            style={{
+              width: Dimensions.get('window').width,
+              height: Dimensions.get('window').height,
+            }}
+            source={{
+              uri: viewImageURI,
+            }}
+          />
+        </ImageZoom>
+      </Overlay>
     </View>
   );
 };
@@ -111,7 +134,7 @@ const MemoBody = ({ id }) => {
   );
 };
 
-const ImageList = ({ images }) => (
+const ImageList = ({ images, memoID, setViewImageURI }) => (
   <View style={styles.imageArea}>
     <FlatList
       data={images}
@@ -124,6 +147,11 @@ const ImageList = ({ images }) => (
           style={{
             width: 200,
             height: 200,
+          }}
+          onPress={async () => {
+            const image = await LoadImage(memoID, item.id);
+            console.log(`load image: ${JSON.stringify(image)}`);
+            setViewImageURI(image.uri);
           }}
         />
       )}
