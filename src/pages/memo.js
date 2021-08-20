@@ -45,18 +45,14 @@ export const Memo = ({ navigation, route }) => {
       <MemoHeader id={route.params.id} setDeleteID={setDeleteID} />
       <MemoBody id={route.params.id} />
 
-      {ENABLE_DEV_FEATURE && (
-        <Button
-          title="画像をピン止め"
-          titleStyle={{ color: 'black', padding: 10 }}
-          buttonStyle={{ backgroundColor: '#d3d3d3', margin: 10 }}
-          onPress={addImage}
-        />
-      )}
+      <Button
+        title="画像をピン止め"
+        titleStyle={{ color: 'black', padding: 10 }}
+        buttonStyle={{ backgroundColor: '#d3d3d3', margin: 10 }}
+        onPress={addImage}
+      />
 
-      {ENABLE_DEV_FEATURE && (
-        <ImageList images={images} setViewImageURI={setViewImageURI} memoID={route.params.id} />
-      )}
+      <ImageList images={images} setViewImageURI={setViewImageURI} memoID={route.params.id} />
 
       <DeleteDialog
         visible={deleteID != null}
@@ -70,26 +66,25 @@ export const Memo = ({ navigation, route }) => {
         }
       />
 
-      {ENABLE_DEV_FEATURE && (
-        <Overlay isVisible={viewImageURI !== ''} onBackdropPress={() => { setViewImageURI(''); }}>
-          <ImageZoom
-            cropWidth={Dimensions.get('window').width}
-            cropHeight={Dimensions.get('window').height}
-            imageWidth={Dimensions.get('window').width}
-            imageHeight={Dimensions.get('window').height}
-          >
-            <Image
-              style={{
-                width: Dimensions.get('window').width,
-                height: Dimensions.get('window').height,
-              }}
-              source={{
-                uri: viewImageURI,
-              }}
-            />
-          </ImageZoom>
-        </Overlay>
-      )}
+      <Overlay isVisible={viewImageURI !== ''} onBackdropPress={() => { setViewImageURI(''); }}>
+        <ImageZoom
+          cropWidth={Dimensions.get('window').width}
+          cropHeight={Dimensions.get('window').height}
+          imageWidth={Dimensions.get('window').width}
+          imageHeight={Dimensions.get('window').height}
+        >
+          <Image
+            style={{
+              margin: 20,
+              width: Dimensions.get('window').width - 40,
+              height: Dimensions.get('window').height - 40,
+            }}
+            source={{
+              uri: viewImageURI,
+            }}
+          />
+        </ImageZoom>
+      </Overlay>
     </View>
   );
 };
