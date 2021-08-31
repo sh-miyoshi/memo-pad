@@ -9,13 +9,14 @@ import { TextInput, DefaultTheme } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import ImageZoom from 'react-native-image-pan-zoom';
 import {
-  LoadMemo, UpdateMemo, RemoveMemo, AddImage, LoadImage,
+  LoadMemo, UpdateMemo, RemoveMemo, AddImage, LoadImage, RemoveImage,
 } from '../store';
 import { DeleteDialog } from '../components/delete';
 import { ENABLE_DEV_FEATURE } from '../env';
 
 export const Memo = ({ navigation, route }) => {
   const [deleteID, setDeleteID] = useState(null);
+  const [deleteImageID, setDeleteImageID] = useState(null);
   const [images, setImages] = useState([]);
   const [viewImageURI, setViewImageURI] = useState('');
 
@@ -52,16 +53,28 @@ export const Memo = ({ navigation, route }) => {
         onPress={addImage}
       />
 
-      <ImageList images={images} setViewImageURI={setViewImageURI} memoID={route.params.id} />
+      <ImageList images={images} setViewImageURI={setViewImageURI} memoID={route.params.id} setDeleteImageID={setDeleteImageID} />
 
       <DeleteDialog
         visible={deleteID != null}
         cancel={() => { setDeleteID(null); }}
-        deleteMemo={
+        deleteFunc={
           async () => {
             console.log(`Delete target: ${deleteID}`);
             await RemoveMemo(deleteID);
             navigation.navigate('Top');
+          }
+        }
+      />
+
+      <DeleteDialog
+        visible={deleteImageID != null}
+        cancel={() => { setDeleteImageID(null); }}
+        deleteFunc={
+          async () => {
+            await RemoveImage(route.params.id, deleteImageID);
+            loadImages();
+            setDeleteImageID(null);
           }
         }
       />
@@ -135,7 +148,9 @@ const MemoBody = ({ id }) => {
   );
 };
 
-const ImageList = ({ images, memoID, setViewImageURI }) => (
+const ImageList = ({
+  images, memoID, setViewImageURI, setDeleteImageID,
+}) => (
   <View style={styles.imageArea}>
     <FlatList
       data={images}
@@ -153,6 +168,9 @@ const ImageList = ({ images, memoID, setViewImageURI }) => (
             const image = await LoadImage(memoID, item.id);
             console.log(`load image: ${JSON.stringify(image)}`);
             setViewImageURI(image.uri);
+          }}
+          onLongPress={() => {
+            setDeleteImageID(item.id);
           }}
         />
       )}

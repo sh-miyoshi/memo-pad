@@ -152,6 +152,31 @@ export const LoadImage = async (memoID, imageID) => {
   return {};
 };
 
+export const RemoveImage = async (memoID, imageID) => {
+  if (imageID == null || imageID.length <= 0) {
+    return;
+  }
+
+  console.log(`delete image for memo: ${memoID}, image: ${imageID}`);
+  let memos = await AsyncStorage.getItem('memo_details');
+  memos = JSON.parse(memos);
+  const index = memos.memo.findIndex((m) => m.id === memoID);
+  if (index < 0) {
+    return;
+  }
+
+  if (memos.memo[index].images != null) {
+    const removed = [];
+    memos.memo[index].images.forEach((image) => {
+      if (image.id !== imageID) {
+        removed.push(image);
+      }
+    });
+    memos.memo[index].images = removed;
+    await AsyncStorage.mergeItem('memo_details', JSON.stringify(memos));
+  }
+};
+
 export const Clear = async () => {
   await AsyncStorage.clear();
 };

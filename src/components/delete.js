@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Dialog } from 'react-native-paper';
 
-export const DeleteDialog = ({ visible, cancel, deleteMemo }) => (
+export const DeleteDialog = ({ visible, cancel, deleteFunc }) => (
   <Dialog visible={visible} onDismiss={cancel}>
     <Dialog.Title>削除</Dialog.Title>
     <Dialog.Content>
@@ -16,7 +16,7 @@ export const DeleteDialog = ({ visible, cancel, deleteMemo }) => (
         title="キャンセル"
       />
       <Button
-        onPress={deleteMemo}
+        onPress={deleteFunc}
         title="削除"
       />
     </Dialog.Actions>
