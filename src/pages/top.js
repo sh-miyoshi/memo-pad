@@ -92,7 +92,7 @@ export const Top = ({ navigation }) => {
       <DeleteDialog
         visible={deleteID != null}
         cancel={() => { setDeleteID(null); }}
-        deleteMemo={
+        deleteFunc={
           async () => {
             console.log(`Delete target: ${deleteID}`);
             await RemoveMemo(deleteID);
