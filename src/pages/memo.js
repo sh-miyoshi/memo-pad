@@ -8,11 +8,12 @@ import {
 import { TextInput, DefaultTheme } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import ImageZoom from 'react-native-image-pan-zoom';
+import { AdMobBanner } from 'expo-ads-admob';
 import {
   LoadMemo, UpdateMemo, RemoveMemo, AddImage, LoadImage, RemoveImage,
 } from '../store';
 import { DeleteDialog } from '../components/delete';
-import { ENABLE_DEV_FEATURE } from '../env';
+import { ENABLE_DEV_FEATURE, AD_UNIT_ID } from '../env';
 
 export const Memo = ({ navigation, route }) => {
   const [deleteID, setDeleteID] = useState(null);
@@ -44,6 +45,14 @@ export const Memo = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <MemoHeader id={route.params.id} setDeleteID={setDeleteID} />
+      <View style={styles.admob}>
+        <AdMobBanner
+          bannerSize="banner"
+          adUnitID={AD_UNIT_ID}
+          onDidFailToReceiveAdWithError={() => { console.log('Ad Fail error'); }}
+        />
+      </View>
+
       <MemoBody id={route.params.id} />
 
       <Button
@@ -196,6 +205,10 @@ const styles = StyleSheet.create({
 
   imageArea: {
     height: 250,
+  },
+
+  admob: {
+    margin: 10,
   },
 });
 

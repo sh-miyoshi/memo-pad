@@ -83,11 +83,13 @@ export const Top = ({ navigation }) => {
 
       <MemoList memos={memos} goMemo={goMemo} setDeleteID={setDeleteID} />
 
-      <AdMobBanner
-        bannerSize="fullBanner"
-        adUnitID={AD_UNIT_ID}
-        onDidFailToReceiveAdWithError={bannerError}
-      />
+      <View style={styles.admob}>
+        <AdMobBanner
+          bannerSize="banner"
+          adUnitID={AD_UNIT_ID}
+          onDidFailToReceiveAdWithError={bannerError}
+        />
+      </View>
 
       <DeleteDialog
         visible={deleteID != null}
@@ -155,6 +157,9 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
     width: '90%',
+  },
+  admob: {
+    margin: 10,
   },
 });
 
