@@ -2,7 +2,7 @@
   "expo": {
     "name": "メモマ",
     "slug": "memo-pad",
-    "version": "1.0.0",
+    "version": "0.3.4",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png"
@@ -15,7 +15,7 @@
       "permissions": [
         "READ_EXTERNAL_STORAGE"
       ],
-      "versionCode": 33
+      "versionCode": 34
     }
   },
   "name": "memo-pad"
