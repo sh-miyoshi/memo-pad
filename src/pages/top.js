@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Text, View, StyleSheet, FlatList,
-} from 'react-native';
-import {
-  Header, Icon, Overlay, Button, ListItem,
-} from 'react-native-elements';
-import { AdMobBanner } from 'expo-ads-admob';
-import {
-  LoadMemoList, RemoveMemo, Clear, AddDummy,
-} from '../store';
+import { View, StyleSheet, Text, FlatList } from 'react-native'
+import { Header, Overlay, Button, Icon, ListItem } from 'react-native-elements';
 import { DeleteDialog } from '../components/delete';
-import { ENABLE_DEV_FEATURE, AD_UNIT_ID } from '../env';
+import { LoadMemoList, AddDummy, Clear } from '../store'
+import { ENABLE_DEV_FEATURE } from '../env';
 
 export const Top = ({ navigation }) => {
   const [memos, setMemos] = useState([]);
@@ -32,10 +25,6 @@ export const Top = ({ navigation }) => {
       console.log('Create new memo');
     }
     navigation.navigate('Memo', { id });
-  };
-
-  const bannerError = () => {
-    console.log('Ad Fail error');
   };
 
   return (
@@ -83,14 +72,6 @@ export const Top = ({ navigation }) => {
 
       <MemoList memos={memos} goMemo={goMemo} setDeleteID={setDeleteID} />
 
-      <View style={styles.admob}>
-        <AdMobBanner
-          bannerSize="banner"
-          adUnitID={AD_UNIT_ID}
-          onDidFailToReceiveAdWithError={bannerError}
-        />
-      </View>
-
       <DeleteDialog
         visible={deleteID != null}
         cancel={() => { setDeleteID(null); }}
@@ -105,8 +86,8 @@ export const Top = ({ navigation }) => {
         }
       />
     </View>
-  );
-};
+  )
+}
 
 const TopHeader = () => {
   const [menuShow, setMenuShow] = useState(false);

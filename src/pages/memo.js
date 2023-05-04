@@ -6,14 +6,13 @@ import {
   Header, Icon, Button, Image, Overlay,
 } from 'react-native-elements';
 import { TextInput, DefaultTheme } from 'react-native-paper';
-import * as ImagePicker from 'expo-image-picker';
-import ImageZoom from 'react-native-image-pan-zoom';
-import { AdMobBanner } from 'expo-ads-admob';
+import { DeleteDialog } from '../components/delete';
 import {
   LoadMemo, UpdateMemo, RemoveMemo, AddImage, LoadImage, RemoveImage,
 } from '../store';
-import { DeleteDialog } from '../components/delete';
-import { ENABLE_DEV_FEATURE, AD_UNIT_ID } from '../env';
+import * as ImagePicker from 'expo-image-picker';
+import ImageZoom from 'react-native-image-pan-zoom';
+import { ENABLE_DEV_FEATURE } from '../env';
 
 export const Memo = ({ navigation, route }) => {
   const [deleteID, setDeleteID] = useState(null);
@@ -31,27 +30,16 @@ export const Memo = ({ navigation, route }) => {
       allowsEditing: false,
     });
 
-    if (!result.cancelled) {
-      console.log(`pick image path: ${result.uri}`);
-      await AddImage(route.params.id, result.uri);
+    if (!result.canceled) {
+      console.log(`pick image path: ${result.assets[0].uri}`);
+      await AddImage(route.params.id, result.assets[0].uri);
       await loadImages();
     }
   };
 
-  useEffect(() => {
-    loadImages();
-  }, []);
-
   return (
     <View style={styles.container}>
       <MemoHeader id={route.params.id} setDeleteID={setDeleteID} />
-      <View style={styles.admob}>
-        <AdMobBanner
-          bannerSize="banner"
-          adUnitID={AD_UNIT_ID}
-          onDidFailToReceiveAdWithError={() => { console.log('Ad Fail error'); }}
-        />
-      </View>
 
       <MemoBody id={route.params.id} />
 
@@ -76,18 +64,6 @@ export const Memo = ({ navigation, route }) => {
         }
       />
 
-      <DeleteDialog
-        visible={deleteImageID != null}
-        cancel={() => { setDeleteImageID(null); }}
-        deleteFunc={
-          async () => {
-            await RemoveImage(route.params.id, deleteImageID);
-            loadImages();
-            setDeleteImageID(null);
-          }
-        }
-      />
-
       <Overlay isVisible={viewImageURI !== ''} onBackdropPress={() => { setViewImageURI(''); }}>
         <ImageZoom
           cropWidth={Dimensions.get('window').width}
@@ -108,9 +84,8 @@ export const Memo = ({ navigation, route }) => {
         </ImageZoom>
       </Overlay>
     </View>
-  );
-};
-
+  )
+}
 const MemoHeader = ({ id, setDeleteID }) => (
   <View>
     <Header
