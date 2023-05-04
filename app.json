@@ -1,22 +1,11 @@
 {
   "expo": {
-    "name": "メモマ",
+    "name": "memo-pad",
     "slug": "memo-pad",
-    "version": "0.3.3",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png"
-    },
+    "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ],
-    "android": {
-      "package": "com.smiyoshi.memopad",
-      "permissions": [
-        "READ_EXTERNAL_STORAGE"
-      ],
-      "versionCode": 33
-    }
+    ]
   },
   "name": "memo-pad"
 }
