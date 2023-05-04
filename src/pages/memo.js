@@ -37,6 +37,10 @@ export const Memo = ({ navigation, route }) => {
     }
   };
 
+  useEffect(() => {
+    loadImages();
+  }, []);
+
   return (
     <View style={styles.container}>
       <MemoHeader id={route.params.id} setDeleteID={setDeleteID} />
