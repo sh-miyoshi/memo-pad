@@ -64,6 +64,18 @@ export const Memo = ({ navigation, route }) => {
         }
       />
 
+      <DeleteDialog
+        visible={deleteImageID != null}
+        cancel={() => { setDeleteImageID(null); }}
+        deleteFunc={
+          async () => {
+            await RemoveImage(route.params.id, deleteImageID);
+            loadImages();
+            setDeleteImageID(null);
+          }
+        }
+      />
+
       <Overlay isVisible={viewImageURI !== ''} onBackdropPress={() => { setViewImageURI(''); }}>
         <ImageZoom
           cropWidth={Dimensions.get('window').width}
