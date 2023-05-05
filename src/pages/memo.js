@@ -1,57 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import {
-  View, StyleSheet, FlatList, Dimensions,
-} from 'react-native';
+  View, StyleSheet, FlatList, Dimensions
+} from 'react-native'
 import {
-  Header, Icon, Button, Image, Overlay,
-} from 'react-native-elements';
-import { TextInput, DefaultTheme } from 'react-native-paper';
-import * as ImagePicker from 'expo-image-picker';
-import ImageZoom from 'react-native-image-pan-zoom';
-import { AdMobBanner } from 'expo-ads-admob';
+  Header, Icon, Button, Image, Overlay
+} from 'react-native-elements'
+import { TextInput, DefaultTheme } from 'react-native-paper'
+import { DeleteDialog } from '../components/delete'
 import {
-  LoadMemo, UpdateMemo, RemoveMemo, AddImage, LoadImage, RemoveImage,
-} from '../store';
-import { DeleteDialog } from '../components/delete';
-import { ENABLE_DEV_FEATURE, AD_UNIT_ID } from '../env';
+  LoadMemo, UpdateMemo, RemoveMemo, AddImage, LoadImage, RemoveImage
+} from '../store'
+import * as ImagePicker from 'expo-image-picker'
+import ImageZoom from 'react-native-image-pan-zoom'
+import { ENABLE_DEV_FEATURE } from '../env'
 
 export const Memo = ({ navigation, route }) => {
-  const [deleteID, setDeleteID] = useState(null);
-  const [deleteImageID, setDeleteImageID] = useState(null);
-  const [images, setImages] = useState([]);
-  const [viewImageURI, setViewImageURI] = useState('');
+  const [deleteID, setDeleteID] = useState(null)
+  const [deleteImageID, setDeleteImageID] = useState(null)
+  const [images, setImages] = useState([])
+  const [viewImageURI, setViewImageURI] = useState('')
 
   const loadImages = async () => {
-    const memo = await LoadMemo(route.params.id);
-    setImages(memo.images);
-  };
+    const memo = await LoadMemo(route.params.id)
+    setImages(memo.images)
+  }
 
   const addImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: false,
-    });
+      allowsEditing: false
+    })
 
-    if (!result.cancelled) {
-      console.log(`pick image path: ${result.uri}`);
-      await AddImage(route.params.id, result.uri);
-      await loadImages();
+    if (!result.canceled) {
+      console.log(`pick image path: ${result.assets[0].uri}`)
+      await AddImage(route.params.id, result.assets[0].uri)
+      await loadImages()
     }
-  };
+  }
 
   useEffect(() => {
-    loadImages();
-  }, []);
+    loadImages()
+  }, [])
 
   return (
     <View style={styles.container}>
       <MemoHeader id={route.params.id} setDeleteID={setDeleteID} />
-      <View style={styles.admob}>
-        <AdMobBanner
-          bannerSize="banner"
-          adUnitID={AD_UNIT_ID}
-          onDidFailToReceiveAdWithError={() => { console.log('Ad Fail error'); }}
-        />
-      </View>
 
       <MemoBody id={route.params.id} />
 
@@ -66,29 +58,29 @@ export const Memo = ({ navigation, route }) => {
 
       <DeleteDialog
         visible={deleteID != null}
-        cancel={() => { setDeleteID(null); }}
+        cancel={() => { setDeleteID(null) }}
         deleteFunc={
           async () => {
-            console.log(`Delete target: ${deleteID}`);
-            await RemoveMemo(deleteID);
-            navigation.navigate('Top');
+            console.log(`Delete target: ${deleteID}`)
+            await RemoveMemo(deleteID)
+            navigation.navigate('Top')
           }
         }
       />
 
       <DeleteDialog
         visible={deleteImageID != null}
-        cancel={() => { setDeleteImageID(null); }}
+        cancel={() => { setDeleteImageID(null) }}
         deleteFunc={
           async () => {
-            await RemoveImage(route.params.id, deleteImageID);
-            loadImages();
-            setDeleteImageID(null);
+            await RemoveImage(route.params.id, deleteImageID)
+            loadImages()
+            setDeleteImageID(null)
           }
         }
       />
 
-      <Overlay isVisible={viewImageURI !== ''} onBackdropPress={() => { setViewImageURI(''); }}>
+      <Overlay isVisible={viewImageURI !== ''} onBackdropPress={() => { setViewImageURI('') }}>
         <ImageZoom
           cropWidth={Dimensions.get('window').width}
           cropHeight={Dimensions.get('window').height}
@@ -99,43 +91,42 @@ export const Memo = ({ navigation, route }) => {
             style={{
               margin: 20,
               width: Dimensions.get('window').width - 40,
-              height: Dimensions.get('window').height - 40,
+              height: Dimensions.get('window').height - 40
             }}
             source={{
-              uri: viewImageURI,
+              uri: viewImageURI
             }}
           />
         </ImageZoom>
       </Overlay>
     </View>
-  );
-};
-
+  )
+}
 const MemoHeader = ({ id, setDeleteID }) => (
   <View>
     <Header
       rightComponent={(
         <View style={styles.headerIcon}>
-          <Icon name="delete" type="antdesign" color="#ffffff" onPress={() => { setDeleteID(id); }} />
+          <Icon name="delete" type="antdesign" color="#ffffff" onPress={() => { setDeleteID(id) }} />
           {ENABLE_DEV_FEATURE && <Icon name="menu" type="feather" color="#ffffff" style={{ marginLeft: 16 }} />}
         </View>
       )}
       containerStyle={{ backgroundColor: '#808080' }}
     />
   </View>
-);
+)
 
 const MemoBody = ({ id }) => {
-  const [text, setText] = useState('');
-  const [currentID, setCurrentID] = useState(id);
+  const [text, setText] = useState('')
+  const [currentID, setCurrentID] = useState(id)
 
   useEffect(() => {
     const load = async () => {
-      const memo = await LoadMemo(id);
-      setText(memo.text);
-    };
-    load();
-  }, []);
+      const memo = await LoadMemo(id)
+      setText(memo.text)
+    }
+    load()
+  }, [])
 
   return (
     <View style={styles.textinput}>
@@ -143,9 +134,9 @@ const MemoBody = ({ id }) => {
         value={text}
         onChangeText={
           async (newText) => {
-            setText(newText);
-            const updatedID = await UpdateMemo(currentID, newText);
-            setCurrentID(updatedID);
+            setText(newText)
+            const updatedID = await UpdateMemo(currentID, newText)
+            setCurrentID(updatedID)
           }
         }
         multiline
@@ -154,11 +145,11 @@ const MemoBody = ({ id }) => {
         numberOfLines={15}
       />
     </View>
-  );
-};
+  )
+}
 
 const ImageList = ({
-  images, memoID, setViewImageURI, setDeleteImageID,
+  images, memoID, setViewImageURI, setDeleteImageID
 }) => (
   <View style={styles.imageArea}>
     <FlatList
@@ -167,55 +158,55 @@ const ImageList = ({
       renderItem={({ item }) => (
         <Image
           source={{
-            uri: item.uri,
+            uri: item.uri
           }}
           style={{
             width: 200,
-            height: 200,
+            height: 200
           }}
           onPress={async () => {
-            const image = await LoadImage(memoID, item.id);
-            console.log(`load image: ${JSON.stringify(image)}`);
-            setViewImageURI(image.uri);
+            const image = await LoadImage(memoID, item.id)
+            console.log(`load image: ${JSON.stringify(image)}`)
+            setViewImageURI(image.uri)
           }}
           onLongPress={() => {
-            setDeleteImageID(item.id);
+            setDeleteImageID(item.id)
           }}
         />
       )}
     />
   </View>
-);
+)
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fffafa',
-    alignItems: 'center',
+    alignItems: 'center'
   },
 
   headerIcon: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
 
   textinput: {
     width: '90%',
-    margin: 10,
+    margin: 10
   },
 
   imageArea: {
-    height: 250,
+    height: 250
   },
 
   admob: {
-    margin: 10,
-  },
-});
+    margin: 10
+  }
+})
 
 const textTheme = {
   ...DefaultTheme,
   colors: {
     primary: '#000000',
-    background: '#fafafa',
-  },
-};
+    background: '#fafafa'
+  }
+}
