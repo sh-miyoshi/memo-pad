@@ -74,8 +74,8 @@ export const Top = ({ navigation }) => {
 
       <DeleteDialog
         visible={deleteID != null}
-        cancel={() => { setDeleteID(null) }}
-        deleteFunc={
+        onCancel={() => { setDeleteID(null) }}
+        onDelete={
           async () => {
             console.log(`Delete target: ${deleteID}`)
             await RemoveMemo(deleteID)

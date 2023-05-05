@@ -58,8 +58,8 @@ export const Memo = ({ navigation, route }) => {
 
       <DeleteDialog
         visible={deleteID != null}
-        cancel={() => { setDeleteID(null) }}
-        deleteFunc={
+        onCancel={() => { setDeleteID(null) }}
+        onDelete={
           async () => {
             console.log(`Delete target: ${deleteID}`)
             await RemoveMemo(deleteID)
@@ -70,8 +70,8 @@ export const Memo = ({ navigation, route }) => {
 
       <DeleteDialog
         visible={deleteImageID != null}
-        cancel={() => { setDeleteImageID(null) }}
-        deleteFunc={
+        onCancel={() => { setDeleteImageID(null) }}
+        onDelete={
           async () => {
             await RemoveImage(route.params.id, deleteImageID)
             loadImages()

@@ -3,8 +3,14 @@ import { Text } from 'react-native'
 import { Button } from 'react-native-elements'
 import { Dialog } from 'react-native-paper'
 
-export const DeleteDialog = ({ visible, cancel, deleteFunc }) => (
-  <Dialog visible={visible} onDismiss={cancel}>
+type Props = {
+  visible: boolean
+  onCancel: () => void
+  onDelete: () => void
+}
+
+export const DeleteDialog: React.FC<Props> = ({ visible, onCancel, onDelete }) => (
+  <Dialog visible={visible} onDismiss={onCancel}>
     <Dialog.Title>削除</Dialog.Title>
     <Dialog.Content>
       <Text>本当に削除しますか？</Text>
@@ -12,11 +18,11 @@ export const DeleteDialog = ({ visible, cancel, deleteFunc }) => (
     <Dialog.Actions>
       <Button
         type="clear"
-        onPress={cancel}
+        onPress={onCancel}
         title="キャンセル"
       />
       <Button
-        onPress={deleteFunc}
+        onPress={onDelete}
         title="削除"
       />
     </Dialog.Actions>
