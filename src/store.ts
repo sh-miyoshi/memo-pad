@@ -12,7 +12,7 @@ type MemoList = {
   memo: MemoListInfo[]
 }
 
-type ImageInfo = {
+export type ImageInfo = {
   id: string
   uri: string
 }
