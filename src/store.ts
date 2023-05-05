@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import uuid from 'react-native-uuid'
 
-type MemoListInfo = {
+export type MemoListInfo = {
   id: string
   title: string
   createdAt: number
@@ -29,11 +29,12 @@ type MemoDetailList = {
 
 export const LoadMemoList = async (): Promise<MemoListInfo[]> => {
   try {
-    const memos = await AsyncStorage.getItem('memos')
-    if (memos == null) {
+    const memos_str = await AsyncStorage.getItem('memos')
+    if (memos_str == null) {
       return []
     } else {
-      return JSON.parse(memos).memo.sort((a, b) => b.updatedAt - a.updatedAt)
+      const memos: MemoList = JSON.parse(memos_str)
+      return memos.memo.sort((a, b) => b.updatedAt - a.updatedAt)
     }
   } catch (e) {
     // error reading value
