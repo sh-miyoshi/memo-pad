@@ -6,7 +6,7 @@
     "ios": "expo run:ios",
     "lint": "eslint --ext .js --fix src/",
     "web": "expo start --web",
-    "build": "expo build:android -t app-bundle"
+    "build": "eas build --platform android"
   },
   "dependencies": {
     "@expo/webpack-config": "^18.0.1",
