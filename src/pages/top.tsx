@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, Text, FlatList } from 'react-native'
 import { Header, Overlay, Button, Icon, ListItem } from 'react-native-elements'
 import { DeleteDialog } from '../components/delete'
-import { LoadMemoList, AddDummy, Clear } from '../store'
+import { LoadMemoList, AddDummy, Clear, MemoListInfo, RemoveMemo } from '../store'
 import { ENABLE_DEV_FEATURE } from '../env'
 
 export const Top = ({ navigation }) => {
-  const [memos, setMemos] = useState([])
-  const [deleteID, setDeleteID] = useState(null)
+  const [memos, setMemos] = useState<MemoListInfo[]>([])
+  const [deleteID, setDeleteID] = useState<string | null>(null)
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', async () => {
@@ -18,7 +18,7 @@ export const Top = ({ navigation }) => {
     return unsubscribe
   }, [navigation])
 
-  const goMemo = (id) => {
+  const goMemo = (id: string | null) => {
     if (id != null) {
       console.log(`Edit ${id}`)
     } else {
@@ -74,8 +74,8 @@ export const Top = ({ navigation }) => {
 
       <DeleteDialog
         visible={deleteID != null}
-        cancel={() => { setDeleteID(null) }}
-        deleteFunc={
+        onCancel={() => { setDeleteID(null) }}
+        onDelete={
           async () => {
             console.log(`Delete target: ${deleteID}`)
             await RemoveMemo(deleteID)
@@ -90,7 +90,7 @@ export const Top = ({ navigation }) => {
 }
 
 const TopHeader = () => {
-  const [menuShow, setMenuShow] = useState(false)
+  const [menuShow, setMenuShow] = useState<boolean>(false)
   const toggleMenu = () => {
     setMenuShow(!menuShow)
   }

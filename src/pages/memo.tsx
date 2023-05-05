@@ -8,17 +8,17 @@ import {
 import { TextInput, DefaultTheme } from 'react-native-paper'
 import { DeleteDialog } from '../components/delete'
 import {
-  LoadMemo, UpdateMemo, RemoveMemo, AddImage, LoadImage, RemoveImage
+  LoadMemo, UpdateMemo, RemoveMemo, AddImage, LoadImage, RemoveImage, ImageInfo
 } from '../store'
 import * as ImagePicker from 'expo-image-picker'
 import ImageZoom from 'react-native-image-pan-zoom'
 import { ENABLE_DEV_FEATURE } from '../env'
 
 export const Memo = ({ navigation, route }) => {
-  const [deleteID, setDeleteID] = useState(null)
-  const [deleteImageID, setDeleteImageID] = useState(null)
-  const [images, setImages] = useState([])
-  const [viewImageURI, setViewImageURI] = useState('')
+  const [deleteID, setDeleteID] = useState<string | null>(null)
+  const [deleteImageID, setDeleteImageID] = useState<string | null>(null)
+  const [images, setImages] = useState<ImageInfo[]>([])
+  const [viewImageURI, setViewImageURI] = useState<string>('')
 
   const loadImages = async () => {
     const memo = await LoadMemo(route.params.id)
@@ -58,8 +58,8 @@ export const Memo = ({ navigation, route }) => {
 
       <DeleteDialog
         visible={deleteID != null}
-        cancel={() => { setDeleteID(null) }}
-        deleteFunc={
+        onCancel={() => { setDeleteID(null) }}
+        onDelete={
           async () => {
             console.log(`Delete target: ${deleteID}`)
             await RemoveMemo(deleteID)
@@ -70,8 +70,8 @@ export const Memo = ({ navigation, route }) => {
 
       <DeleteDialog
         visible={deleteImageID != null}
-        cancel={() => { setDeleteImageID(null) }}
-        deleteFunc={
+        onCancel={() => { setDeleteImageID(null) }}
+        onDelete={
           async () => {
             await RemoveImage(route.params.id, deleteImageID)
             loadImages()
@@ -81,6 +81,7 @@ export const Memo = ({ navigation, route }) => {
       />
 
       <Overlay isVisible={viewImageURI !== ''} onBackdropPress={() => { setViewImageURI('') }}>
+        {/* @ts-ignore ライブラリがpublic archiveなので置き換えるまで無視する */}
         <ImageZoom
           cropWidth={Dimensions.get('window').width}
           cropHeight={Dimensions.get('window').height}
