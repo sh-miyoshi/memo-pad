@@ -16,6 +16,11 @@
         "READ_EXTERNAL_STORAGE"
       ],
       "versionCode": 34
+    },
+    "extra": {
+      "eas": {
+        "projectId": "55b5b246-64fd-4ad5-a8b9-7e2eaedfe1a9"
+      }
     }
   },
   "name": "memo-pad"
