@@ -1,7 +1,7 @@
-import React from 'react';
-import { Text } from 'react-native';
-import { Button } from 'react-native-elements';
-import { Dialog } from 'react-native-paper';
+import React from 'react'
+import { Text } from 'react-native'
+import { Button } from 'react-native-elements'
+import { Dialog } from 'react-native-paper'
 
 export const DeleteDialog = ({ visible, cancel, deleteFunc }) => (
   <Dialog visible={visible} onDismiss={cancel}>
@@ -21,4 +21,4 @@ export const DeleteDialog = ({ visible, cancel, deleteFunc }) => (
       />
     </Dialog.Actions>
   </Dialog>
-);
+)
