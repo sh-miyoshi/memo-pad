@@ -13,8 +13,7 @@
     "android": {
       "package": "com.smiyoshi.memopad",
       "permissions": [
-        "READ_EXTERNAL_STORAGE",
-        "CAMERA"
+        "READ_EXTERNAL_STORAGE"
       ],
       "versionCode": 34
     },

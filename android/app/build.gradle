@@ -115,11 +115,11 @@ android {
 
     namespace "com.memopad"
     defaultConfig {
-        applicationId "com.memopad"
+        applicationId "com.smiyoshi.memopad"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 34
+        versionName "0.3.4"
     }
     splits {
         abi {
