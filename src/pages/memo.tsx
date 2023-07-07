@@ -192,6 +192,7 @@ const styles = StyleSheet.create({
 
   textinput: {
     width: '90%',
+    height: 300,
     margin: 10
   },
 
