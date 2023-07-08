@@ -132,7 +132,7 @@ const MemoHeader = ({ id, setDeleteID }) => {
       <Header
         rightComponent={(
           <View style={styles.headerIcon}>
-            {ENABLE_DEV_FEATURE && <Icon name="menu" type="feather" color="#ffffff" style={{ marginLeft: 16 }} onPress={toggleMenu} />}
+            <Icon name="menu" type="feather" color="#ffffff" style={{ marginLeft: 16 }} onPress={toggleMenu} />
           </View>
         )}
         containerStyle={{ backgroundColor: '#808080' }}
