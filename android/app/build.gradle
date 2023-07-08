@@ -118,8 +118,8 @@ android {
         applicationId "com.smiyoshi.memopad"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 36
-        versionName "0.3.6"
+        versionCode 40
+        versionName "0.4.0"
     }
     splits {
         abi {
