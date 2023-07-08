@@ -138,21 +138,23 @@ const MemoHeader = ({ id, setDeleteID }) => {
         containerStyle={{ backgroundColor: '#808080' }}
       />
       <Overlay isVisible={menuShow} onBackdropPress={toggleMenu}>
-        <Text>メニュー</Text>
-        <Divider color='#000000' />
-        <FlatList
-          data={[
-            { title: '削除', func: openDeleteDialog },
-            { title: 'メールで共有', func: sendEmail },
-          ]}
-          renderItem={({ item }) => (
-            <ListItem bottomDivider onPress={item.func}>
-              <ListItem.Content>
-                <ListItem.Title style={{ width: '90%' }}>{item.title}</ListItem.Title>
-              </ListItem.Content>
-            </ListItem>
-          )}
-        />
+        <View style={{ height: 350, width: 300 }}>
+          <Text>メニュー</Text>
+          <Divider color='#000000' />
+          <FlatList
+            data={[
+              { title: '削除', func: openDeleteDialog },
+              { title: 'メールで共有', func: sendEmail },
+            ]}
+            renderItem={({ item }) => (
+              <ListItem bottomDivider onPress={item.func}>
+                <ListItem.Content>
+                  <ListItem.Title style={{ width: '90%' }}>{item.title}</ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+            )}
+          />
+        </View>
       </Overlay>
     </View >
   )
