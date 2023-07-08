@@ -3,7 +3,7 @@ import {
   View, StyleSheet, FlatList, Dimensions
 } from 'react-native'
 import {
-  Header, Icon, Button, Image, Overlay
+  Header, Icon, Button, Image, Overlay, ListItem, Text, Divider
 } from 'react-native-elements'
 import { TextInput, DefaultTheme } from 'react-native-paper'
 import { DeleteDialog } from '../components/delete'
@@ -13,6 +13,7 @@ import {
 import * as ImagePicker from 'expo-image-picker'
 import ImageZoom from 'react-native-image-pan-zoom'
 import { ENABLE_DEV_FEATURE } from '../env'
+import email from 'react-native-email'
 
 export const Memo = ({ navigation, route }) => {
   const [deleteID, setDeleteID] = useState<string | null>(null)
@@ -103,19 +104,59 @@ export const Memo = ({ navigation, route }) => {
     </View>
   )
 }
-const MemoHeader = ({ id, setDeleteID }) => (
-  <View>
-    <Header
-      rightComponent={(
-        <View style={styles.headerIcon}>
-          <Icon name="delete" type="antdesign" color="#ffffff" onPress={() => { setDeleteID(id) }} />
-          {ENABLE_DEV_FEATURE && <Icon name="menu" type="feather" color="#ffffff" style={{ marginLeft: 16 }} />}
-        </View>
-      )}
-      containerStyle={{ backgroundColor: '#808080' }}
-    />
-  </View>
-)
+
+const MemoHeader = ({ id, setDeleteID }) => {
+  const [menuShow, setMenuShow] = useState<boolean>(false)
+  const toggleMenu = () => {
+    setMenuShow(!menuShow)
+  }
+
+  const sendEmail = async () => {
+    const memo = await LoadMemo(id)
+
+    email([], {
+      cc: [],
+      bcc: [],
+      subject: '',
+      body: memo.text
+    }).catch(console.error)
+  }
+
+  const openDeleteDialog = () => {
+    setMenuShow(false)
+    setDeleteID(id)
+  }
+
+  return (
+    <View>
+      <Header
+        rightComponent={(
+          <View style={styles.headerIcon}>
+            {ENABLE_DEV_FEATURE && <Icon name="menu" type="feather" color="#ffffff" style={{ marginLeft: 16 }} onPress={toggleMenu} />}
+          </View>
+        )}
+        containerStyle={{ backgroundColor: '#808080' }}
+      />
+      <Overlay isVisible={menuShow} onBackdropPress={toggleMenu}>
+        <Text>メニュー</Text>
+        <Divider color='#000000' />
+        <FlatList
+          data={[
+            { title: '削除', func: openDeleteDialog },
+            { title: 'メールで共有', func: sendEmail },
+          ]}
+          renderItem={({ item }) => (
+            <ListItem bottomDivider onPress={item.func}>
+              <ListItem.Content>
+                <ListItem.Title style={{ width: '90%' }}>{item.title}</ListItem.Title>
+              </ListItem.Content>
+            </ListItem>
+          )}
+        />
+      </Overlay>
+    </View >
+  )
+}
 
 const MemoBody = ({ id }) => {
   const [text, setText] = useState('')

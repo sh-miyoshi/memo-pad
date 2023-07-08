@@ -4,9 +4,6 @@
     "slug": "memo-pad",
     "version": "0.3.6",
     "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
